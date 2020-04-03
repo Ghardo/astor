@@ -105,3 +105,11 @@ w.OnMessage(func(m *astilectron.EventMessage) interface{} {
 
 See example for more info
 
+```
+cd example/vue
+yarn install
+yarn build
+cd ..
+go run main.go
+```
+
