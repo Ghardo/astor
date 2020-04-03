@@ -100,7 +100,7 @@ w.OnMessage(func(m *astilectron.EventMessage) interface{} {
     r := AstorEvent{Name: e.Name, Payload: "Ok"}
     return r
 })
-...
+```
 
 
 See example for more info
