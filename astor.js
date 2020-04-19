@@ -18,7 +18,7 @@ export default {
             onAstilectronMessage: function(message) {
                 if (message) {
                     this.log('GO -> Vue', message);
-                    this.eventBus.$emit(message.name, message.payload);
+                    this.emit(message.name, message.payload);
                 }
             },
             trigger: function(name, payload = {}, callback = null) {
@@ -36,6 +36,9 @@ export default {
                     this.log('listen', {name: name, callback: callback});
                     this.eventBus.$on(name, callback);
                 }
+            },
+            emit: function(name, payload = {}) {
+                this.eventBus.$emit(name, payload);
             },
             remove: function(name, callback) {
                 this.eventBus.$off(name, callback);
