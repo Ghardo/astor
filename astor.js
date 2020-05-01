@@ -38,6 +38,7 @@ export default {
                 }
             },
             emit: function(name, payload = {}) {
+                this.log('EMIT', {name: name, payload: payload});
                 this.eventBus.$emit(name, payload);
             },
             remove: function(name, callback) {
