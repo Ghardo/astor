@@ -36,7 +36,7 @@ export default {
                 astilectron.sendMessage({name: name, payload: payload}, this.onAstilectronMessage.bind(this));
             },
             listen: function(name, callback, once = false) {
-                if (once) {4
+                if (once) {
                     this.log('listen once', {name: name, callback: callback});
                     this.eventBus.$once(name, callback);
                 } else {
