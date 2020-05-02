@@ -22,14 +22,21 @@ export default {
                 }
             },
             trigger: function(name, payload = {}, callback = null) {
-                this.log('Vue -> GO', {name: name, payload: payload});
+                let logMessage = 'Vue -> GO';
+
                 if (callback !== null) {
-                    this.listen(name, callback, true)
+                    logMessage = logMessage + ' (scoped)';
+                    name = name + this.getScope()
+                } 
+
+                this.log(logMessage, {name: name, payload: payload});
+                if (callback !== null) {
+                    this.listen(name + '.callback', callback, true)
                 }
                 astilectron.sendMessage({name: name, payload: payload}, this.onAstilectronMessage.bind(this));
             },
             listen: function(name, callback, once = false) {
-                if (once) {
+                if (once) {4
                     this.log('listen once', {name: name, callback: callback});
                     this.eventBus.$once(name, callback);
                 } else {
@@ -54,9 +61,12 @@ export default {
                 } else {
                     console.log('ASTOR| ' + message);
                 }
+            },
+            getScope: function() {
+                return '#' + Math.random().toString(36).substr(2, 7);
             }
         }
-
+        
         Vue.prototype.$astor.debug = debug
         Vue.prototype.$astor.init()
     }   
