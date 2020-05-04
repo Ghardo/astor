@@ -33,7 +33,7 @@ The listener "astilectron-ready" around new Vue is required to prevent timing er
 
 ### Sending and recieving
 
-```vue
+```js
 <template>
   <div>Hello Word</div>
 </template>
