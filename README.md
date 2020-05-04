@@ -8,7 +8,7 @@ copy astor.js to PROJECTROOT/plugins/astor.js
 
 ### Plugin registration
 
-```vue
+```js
 import Vue from 'vue'
 import App from './App.vue'
 import astor from './plugins/astor';
@@ -33,7 +33,7 @@ The listener "astilectron-ready" around new Vue is required to prevent timing er
 
 ### Sending and recieving
 
-```js
+```vue
 <template>
   <div>Hello Word</div>
 </template>
