@@ -6,13 +6,10 @@ Vue.config.productionTip = false
 
 Vue.use(
   astor,  {
-    debug: true
+    debug: process.env.NODE_ENV !== 'production'
   }
 )
 
-document.addEventListener('astilectron-ready', function() {
-  new Vue({
-    render: h => h(App)
-  }).$mount('#app')
-})
-
+new Vue({
+  render: h => h(App),
+}).$mount('#app')

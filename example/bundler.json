@@ -1,0 +1,7 @@
+{
+    "app_name": "AstorExample",
+    "icon_path_linux": "resources/icon.png",
+    "version_astilectron": "0.37.0",
+    "version_electron": "8.2.0"
+
+  }
