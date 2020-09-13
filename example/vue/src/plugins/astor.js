@@ -38,7 +38,6 @@ export default {
             },
             onIsReady: function(callback) {
                 let self = this;
-                // if delay is undefined or is not an integer
                 let delay = 100;
                 if (!this.isReady) {
                     setTimeout(function () {
