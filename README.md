@@ -21,15 +21,11 @@ Vue.use(
   }
 )
 
-document.addEventListener('astilectron-ready', function() {
-  new Vue({
-    render: h => h(App)
-  }).$mount('#app')
-})
+
+new Vue({
+  render: h => h(App)
+}).$mount('#app')
 ```
-
-The listener "astilectron-ready" around new Vue is required to prevent timing errors.
-
 
 ### Sending and recieving
 
