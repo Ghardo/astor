@@ -1,0 +1,111 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build exe",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && astilectron-bundler",
+            "windows": {
+                "command": "cd ${workspaceFolder} ; astilectron-bundler.exe"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": ["vue: build"],
+            "problemMatcher": []
+        },
+        {
+            "label": "bundler",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && astilectron-bundler",
+            "windows": {
+                "command": "cd ${workspaceFolder} ; astilectron-bundler.exe"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "vue: build",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/vue && yarn build",
+            "windows": {
+                "command": "cd ${workspaceFolder}/vue ; yarn build"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+        {
+            "label": "vue: ui",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/vue && vue ui",
+            "windows": {
+                "command": "cd ${workspaceFolder}/vue ; vue ui"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+        {
+            "label": "vue: clean",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && rm -r build/resources",
+            "windows": {
+                "command": "cd ${workspaceFolder} ; rm -r build\\resources"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+        {
+            "label": "vue: serve",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/vue && yarn serve",
+            "windows": {
+                "command": "cd ${workspaceFolder}/vue ; yarn serve"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+        {
+            "label": "vue: clean install",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/vue && rm -rfv node_moodules && yarn install",
+            "windows": {
+                "command": "cd ${workspaceFolder}/vue ; rmdir node_modules ; yarn install"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+    ]
+}

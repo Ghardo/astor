@@ -1,13 +1,14 @@
 import EventBus from 'vue';
-/* eslint-disable */
 
 /* astor
  * a vuejs plugin for communicate with a go-astilectron
  *
  * https://github.com/Ghardo/astor
+ * 
  * Version 1.1
  */
 
+/* eslint-disable */
 export default {
     install (Vue, options) {
         const { debug, skipWait } = options
@@ -35,12 +36,23 @@ export default {
                 document.removeEventListener('astilectron-ready', this.onAstilectronReady.bind(this));
                 this.isReady = true;
             },
-            onIsReady (callback) {
+            onIsReady: function(callback) {
+                let self = this;
                 // if delay is undefined or is not an integer
-                delay = 100;
-                setTimeout(function () {
-                    (this.isReady) ? callback() : waitForReady();
-                }, delay);
+                let delay = 100;
+                if (!this.isReady) {
+                    setTimeout(function () {
+                        if (this.isReady) {
+                            self.log('astor is ready');
+                            callback();
+                        } else {
+                            self.onIsReady(callback);
+                        }
+                    }, delay);
+                } else {
+                    this.log('astor is ready');
+                    callback();
+                }
             },
             onAstilectronMessage: function(message) {
                 if (message) {

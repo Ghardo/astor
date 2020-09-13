@@ -1,83 +1,81 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/asticode/go-astikit"
 	"github.com/asticode/go-astilectron"
+	bootstrap "github.com/asticode/go-astilectron-bootstrap"
 )
 
-type AstorEvent struct {
-	Name    string      `json:"name"`
-	Payload interface{} `json:"payload"`
-}
+// Vars injected via ldflags by bundler
+var (
+	BuiltAt            string
+	VersionAstilectron string
+	VersionElectron    string
+)
+
+// Application Vars
+var (
+	debug = true
+	w     *astilectron.Window
+)
 
 func main() {
-	// Set logger
+	// Parse flags
+	flag.Parse()
+
+	// Create logger
 	l := log.New(log.Writer(), log.Prefix(), log.Flags())
 
-	// Create astilectron
-	a, err := astilectron.New(l, astilectron.Options{
-		AppName:            "Test",
-		VersionAstilectron: "0.37.0",
-		VersionElectron:    "8.2.0",
-	})
-	if err != nil {
-		l.Fatal(fmt.Errorf("main: creating astilectron failed: %w", err))
-	}
-	defer a.Close()
+	url := "index.html"
 
-	// Handle signals
-	a.HandleSignals()
-
-	// Start
-	if err = a.Start(); err != nil {
-		l.Fatal(fmt.Errorf("main: starting astilectron failed: %w", err))
+	// Debug
+	if debug {
+		url = "http://localhost:8080"
 	}
 
-	// New window
-	var w *astilectron.Window
-	if w, err = a.NewWindow("build/resources/index.html", &astilectron.WindowOptions{
-		Center: astikit.BoolPtr(true),
-		Height: astikit.IntPtr(700),
-		Width:  astikit.IntPtr(1000),
+	// Run bootstrap
+	l.Printf("Running app built at %s\n", BuiltAt)
+	if err := bootstrap.Run(bootstrap.Options{
+		Asset:    Asset,
+		AssetDir: AssetDir,
+		AstilectronOptions: astilectron.Options{
+			AppName:            "AstorExample",
+			AppIconDefaultPath: "resources/icon.png",
+			SingleInstance:     true,
+			VersionAstilectron: "0.37.0",
+			VersionElectron:    "8.2.0",
+		},
+		Debug:       debug,
+		Logger:      l,
+		MenuOptions: nil,
+		OnWait: func(_ *astilectron.Astilectron, ws []*astilectron.Window, _ *astilectron.Menu, _ *astilectron.Tray, _ *astilectron.Menu) error {
+			w = ws[0]
+			go func() {
+				time.Sleep(2 * time.Second)
+				if debug {
+					w.OpenDevTools()
+				}
+			}()
+			return nil
+		},
+		RestoreAssets: RestoreAssets,
+		Windows: []*bootstrap.Window{{
+			Homepage:       url,
+			MessageHandler: handleMessages,
+			Options: &astilectron.WindowOptions{
+				BackgroundColor: astikit.StrPtr("#333333"),
+				Center:          astikit.BoolPtr(true),
+				Resizable:       astikit.BoolPtr(true),
+				Height:          astikit.IntPtr(600),
+				Width:           astikit.IntPtr(800),
+			},
+		}},
 	}); err != nil {
-		l.Fatal(fmt.Errorf("main: new window failed: %w", err))
+		l.Fatal(fmt.Errorf("running bootstrap failed: %w", err))
 	}
-
-	// Create windows
-	if err = w.Create(); err != nil {
-		l.Fatal(fmt.Errorf("main: creating window failed: %w", err))
-	}
-
-	w.OpenDevTools()
-	// This will listen to messages sent by Javascript
-	w.OnMessage(func(m *astilectron.EventMessage) interface{} {
-		var r AstorEvent
-		// Unmarshal
-		var e AstorEvent
-		m.Unmarshal(&e)
-
-		l.Printf("%v", e)
-
-		if e.Name == "app-ready" {
-			r = AstorEvent{Name: e.Name, Payload: "I got your message. Thanks."}
-			cm := AstorEvent{Name: "go-custom-message", Payload: "custom Message from go."}
-
-			for i := 0; i < 5; i++ {
-				w.SendMessage(cm)
-				time.Sleep(1 * time.Second)
-			}
-
-			return r
-		}
-
-		r = AstorEvent{Name: e.Name, Payload: "unknown message"}
-		return r
-	})
-
-	// Blocking pattern
-	a.Wait()
 }
