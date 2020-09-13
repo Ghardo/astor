@@ -1,5 +1,14 @@
 import EventBus from 'vue';
 /* eslint-disable */
+
+/* astor
+ * a vuejs plugin for communicate with a go-astilectron
+ *
+ * https://github.com/Ghardo/astor
+ * 
+ * Version 1.1
+ */
+
 export default {
     install (Vue, options) {
         const { debug, skipWait } = options
