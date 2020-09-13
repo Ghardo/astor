@@ -5,7 +5,6 @@ import EventBus from 'vue';
  * a vuejs plugin for communicate with a go-astilectron
  *
  * https://github.com/Ghardo/astor
- * 
  * Version 1.1
  */
 
