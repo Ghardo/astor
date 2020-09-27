@@ -1,6 +1,8 @@
 # astor
 **astor** is a vuejs plugin for communicate with a go-astilectron app
 
+**NOTE** vue3 support curently in development
+
 ## Install
 copy astor.js to PROJECTROOT/plugins/astor.js
 
