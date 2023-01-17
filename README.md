@@ -1,16 +1,18 @@
 # astor
+
 **astor** is a vuejs 3.x plugin for communicate with a go-astilectron app
 
 **NOTE** vuejs 2 is only supported on astor v1.x
 
 ## Install
+
 copy astor.js to PROJECTROOT/plugins/astor.js
 
 ## Usage
 
 ### Plugin registration
 
-```js
+```:js
 import { createApp } from 'vue'
 import App from './App.vue'
 import astor from './plugins/astor';
@@ -74,11 +76,10 @@ export default {
 </style>
 ```
 
-```go
-
+```:go
 type AstorEvent struct {
-	Name    string      `json:"name"`
-	Payload interface{} `json:"payload"`
+  Name    string      `json:"name"`
+  Payload interface{} `json:"payload"`
 }
 ...
 w.OnMessage(func(m *astilectron.EventMessage) interface{} {
@@ -93,14 +94,12 @@ w.OnMessage(func(m *astilectron.EventMessage) interface{} {
 })
 ```
 
-
 See example for more info
 
-```
+```:shell
 cd example/vue
-yarn install
-yarn build
+npm install
+npm run dev
 cd ..
 go run main.go
 ```
-
