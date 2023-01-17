@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/asticode/go-astikit"
-	"github.com/asticode/go-astilectron"
+	astikit "github.com/asticode/go-astikit"
+	astilectron "github.com/asticode/go-astilectron"
 	bootstrap "github.com/asticode/go-astilectron-bootstrap"
 )
 
@@ -35,14 +35,12 @@ func main() {
 
 	// Debug
 	if debug {
-		url = "http://localhost:8080"
+		url = "http://localhost:5173/index.html"
 	}
 
 	// Run bootstrap
 	l.Printf("Running app built at %s\n", BuiltAt)
 	if err := bootstrap.Run(bootstrap.Options{
-		Asset:    Asset,
-		AssetDir: AssetDir,
 		AstilectronOptions: astilectron.Options{
 			AppName:            "AstorExample",
 			AppIconDefaultPath: "resources/icon.png",
@@ -63,7 +61,6 @@ func main() {
 			}()
 			return nil
 		},
-		RestoreAssets: RestoreAssets,
 		Windows: []*bootstrap.Window{{
 			Homepage:       url,
 			MessageHandler: handleMessages,

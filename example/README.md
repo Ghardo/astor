@@ -1,22 +1,18 @@
-Simpel example how to use astor
+# Simple example how to use astor
 
-
-
-```
-astilectron-bundler.exe
+```shell:
 cd vue
 npm install
-npm build
+npm run dev
+cd ..
+go run main.go
 ```
 
 press F5 in vsc
 
+this example needs a custom vite.config.js
 
-this example needs a custom vite.config.js 
-
-```
-import { fileURLToPath, URL } from 'node:url'
-
+```:shell
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -25,11 +21,6 @@ export default defineConfig({
   build: {
     outDir: '../resources/app'
   },
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+  plugins: [vue()]
 })
 ```
