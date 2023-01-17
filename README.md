@@ -1,7 +1,7 @@
 # astor
-**astor** is a vuejs plugin for communicate with a go-astilectron app
+**astor** is a vuejs 3.x plugin for communicate with a go-astilectron app
 
-**NOTE** vue3 support curently in development
+**NOTE** vuejs 2 is only supported on astor v1.x
 
 ## Install
 copy astor.js to PROJECTROOT/plugins/astor.js
@@ -11,22 +11,15 @@ copy astor.js to PROJECTROOT/plugins/astor.js
 ### Plugin registration
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import astor from './plugins/astor';
 
-Vue.config.productionTip = false
+const app = createApp(App)
 
-Vue.use(
-  astor,  {
-    debug: true
-  }
-)
+app.use(astor, { debug: true })
 
-
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')
 ```
 
 ### Sending and recieving
