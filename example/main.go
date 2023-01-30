@@ -1,13 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
+	"regexp"
 	"time"
 
-	"github.com/asticode/go-astikit"
-	"github.com/asticode/go-astilectron"
+	astikit "github.com/asticode/go-astikit"
+	astilectron "github.com/asticode/go-astilectron"
 	bootstrap "github.com/asticode/go-astilectron-bootstrap"
 )
 
@@ -35,14 +37,12 @@ func main() {
 
 	// Debug
 	if debug {
-		url = "http://localhost:8080"
+		url = "http://localhost:5173/index.html"
 	}
 
 	// Run bootstrap
 	l.Printf("Running app built at %s\n", BuiltAt)
 	if err := bootstrap.Run(bootstrap.Options{
-		Asset:    Asset,
-		AssetDir: AssetDir,
 		AstilectronOptions: astilectron.Options{
 			AppName:            "AstorExample",
 			AppIconDefaultPath: "resources/icon.png",
@@ -63,7 +63,6 @@ func main() {
 			}()
 			return nil
 		},
-		RestoreAssets: RestoreAssets,
 		Windows: []*bootstrap.Window{{
 			Homepage:       url,
 			MessageHandler: handleMessages,
@@ -78,4 +77,43 @@ func main() {
 	}); err != nil {
 		l.Fatal(fmt.Errorf("running bootstrap failed: %w", err))
 	}
+}
+
+type PayloadAstorTestEvent struct {
+	Text string `json:"text"`
+}
+
+type PayloadAstorBtnText struct {
+	Button int    `json:"button"`
+	Text   string `json:"text"`
+}
+
+type PayloadAstorBtnClick struct {
+	ButtonID int `json:"buttonId"`
+}
+
+type AstorEvent struct {
+	Name    string      `json:"name"`
+	Payload interface{} `json:"payload"`
+}
+
+// handleMessages handles messages
+func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload interface{}, err error) {
+	re, _ := regexp.Compile("^(.*?)(#.*?)?$")
+	match := re.FindStringSubmatch(m.Name)
+
+	switch string(match[1]) {
+	case "test.event":
+		answerPayloadAstorTestEvent := PayloadAstorTestEvent{Text: "Hello World"}
+		return answerPayloadAstorTestEvent, nil
+	case "btn.click":
+		var payloadAstorBtnClick PayloadAstorBtnClick
+		if err = json.Unmarshal(m.Payload, &payloadAstorBtnClick); err == nil {
+			anserPayloaddAstorBtnText := PayloadAstorBtnText{Button: payloadAstorBtnClick.ButtonID, Text: "clicked"}
+			astorEventBtnText := AstorEvent{Name: "butten.text", Payload: anserPayloaddAstorBtnText}
+			w.SendMessage(astorEventBtnText)
+		}
+	}
+
+	return nil, err
 }

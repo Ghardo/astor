@@ -1,35 +1,30 @@
 # astor
-**astor** is a vuejs plugin for communicate with a go-astilectron app
 
-**NOTE** vue3 support curently in development
+**astor** is a vuejs 3.x plugin for communicate with a go-astilectron app
+
+**NOTE** vuejs 2 is only supported on astor v1.x
 
 ## Install
+
 copy astor.js to PROJECTROOT/plugins/astor.js
 
 ## Usage
 
 ### Plugin registration
 
-```js
-import Vue from 'vue'
+```:js
+import { createApp } from 'vue'
 import App from './App.vue'
 import astor from './plugins/astor';
 
-Vue.config.productionTip = false
+const app = createApp(App)
 
-Vue.use(
-  astor,  {
-    debug: true
-  }
-)
+app.use(astor, { debug: true })
 
-
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')
 ```
 
-### Sending and recieving
+### Sending and receiving with Options API
 
 ```vue
 <template>
@@ -38,15 +33,15 @@ new Vue({
 
 <script>
 export default {
-     created () {
-      this.$astor.trigger(
-        'app-ready', 
-        {}, 
-        (payload) => {
-          window.console.log("ready", payload)
-        }
-      )
-    },
+  created () {
+  this.$astor.trigger(
+      'app-ready', 
+      {}, 
+      (payload) => {
+        window.console.log("ready", payload)
+      }
+    )
+  },
 }
 </script>
 
@@ -54,26 +49,54 @@ export default {
 </style>
 ```
 
-### Recieving only
+### Sending and receiving with Composition API
 
 ```vue
 <template>
   <div>Hello Word</div>
 </template>
 
-<script>
-export default {
-     created () {
-      this.$astor.listen(
-        'my-custom-message', 
-        this.cbMyCustomMessage
-      )
-    },
-    methods: {
-        cbMyCustomMessage(payload) {
-            window.console.log('cbMyCustomMessage', payload)
-        }
+<script setup>
+import useAstor from './plugins/astor'
+import onBeforeMount from 'vue'
+
+const astor = useAstor()
+
+onBeforeMount(() => {
+  astor.trigger(
+    'app-ready',
+    {}, 
+    (payload) => {
+      window.console.log("ready", payload)
     }
+  )
+})
+</script>
+
+<style>
+</style>
+```
+
+### Receiving only with Options API
+
+```vue
+<template>
+  <div>Hello Word</div>
+</template>
+
+<script>
+export default {
+  created () {
+    this.$astor.listen(
+      'my-custom-message', 
+      this.cbMyCustomMessage
+    )
+  },
+  methods: {
+    cbMyCustomMessage(payload) {
+      window.console.log('cbMyCustomMessage', payload)
+    }
+  }
 }
 </script>
 
@@ -81,11 +104,39 @@ export default {
 </style>
 ```
 
-```go
+### Receiving only with Composition API
 
+```vue
+<template>
+  <div>Hello Word</div>
+</template>
+
+<script setup>
+  import useAstor from './plugins/astor'
+  import onBeforeMount from 'vue'
+
+  const astor = useAstor()
+
+  const cbMyCustomMessage = (payload) => {
+    window.console.log('cbMyCustomMessage', payload)
+  }
+
+  onBeforeMount(() => {
+    astor.listen(
+      'my-custom-message',
+      cbMyCustomMessage
+    )
+  })
+</script>
+
+<style>
+</style>
+```
+
+```:go
 type AstorEvent struct {
-	Name    string      `json:"name"`
-	Payload interface{} `json:"payload"`
+  Name    string      `json:"name"`
+  Payload interface{} `json:"payload"`
 }
 ...
 w.OnMessage(func(m *astilectron.EventMessage) interface{} {
@@ -100,14 +151,12 @@ w.OnMessage(func(m *astilectron.EventMessage) interface{} {
 })
 ```
 
-
 See example for more info
 
-```
+```:shell
 cd example/vue
-yarn install
-yarn build
+npm install
+npm run dev
 cd ..
 go run main.go
 ```
-

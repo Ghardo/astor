@@ -1,25 +1,26 @@
-Simpel example how to use astor
+# Simple example how to use astor
 
-
-
-```
-astilectron-bundler.exe
+```shell:
 cd vue
-yarn install
-yarn serve
-
+npm install
+npm run dev
+cd ..
+go run main.go
 ```
 
 press F5 in vsc
 
+this example needs a custom vite.config.js
 
-this example needs a custom vue.config.js 
+```:shell
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-```
-module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-      ? ''
-      : '/',
-  outputDir: '../resources/app/',
-}
+// https://vitejs.dev/config/
+export default defineConfig({
+  build: {
+    outDir: '../resources/app'
+  },
+  plugins: [vue()]
+})
 ```
